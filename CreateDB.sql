@@ -93,10 +93,11 @@ CREATE TABLE staff(
 );
 --recharge(amount, (staff_id), (username))
 CREATE TABLE recharge (
+  recharge_id SERIAL,
 	username VARCHAR(20) NOT NULL,
 	amount INT NOT NULL,
 	staff_id VARCHAR(20) NOT NULL,
-	CONSTRAINT recharge_pk PRIMARY KEY (username),
+	CONSTRAINT recharge_pk FOREIGN KEY (username) REFERENCES account(username),
 	CONSTRAINT recharge_staff_id_fk FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
 );
 
