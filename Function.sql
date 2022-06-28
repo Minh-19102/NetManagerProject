@@ -5,3 +5,10 @@ BEGIN
   UPDATE account SET balance = balance + a_value WHERE username = uname;
 END;
 $$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION Order() AS
+$$
+BEGIN
+END;
+$$
+$$ LANGUAGE PLPGSQL;
