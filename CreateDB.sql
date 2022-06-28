@@ -124,9 +124,11 @@ CREATE TABLE service (
 
 -- service_ticket(ticket_id, (staff_id), (username))
 CREATE TABLE service_ticket (
-	ticket_id INT NOT NULL,
+	ticket_id SERIAL,
 	staff_id VARCHAR(20) NOT NULL,
 	username VARCHAR(20) NOT NULL,
+  purchased INT DEFAULT 0,
+  CONSTRAINT purchased_check CHECK (purchased=0 or purchased=1),
 	CONSTRAINT ticket_pk PRIMARY KEY (ticket_id),
 	CONSTRAINT ticket_username_fk FOREIGN KEY (username) REFERENCES account(username)
 );
@@ -136,7 +138,7 @@ CREATE TABLE service_info (
 	service_id INT NOT NULL,
 	ticket_id INT NOT NULL,
 	quantity INT NOT NULL,
-	discount VARCHAR(3),
+	discount FLOAT,
 	CONSTRAINT service_info_service_ticket_fk FOREIGN KEY (service_id) REFERENCES service(service_id),
 	CONSTRAINT service_info_ticket_id_fk FOREIGN KEY (ticket_id) REFERENCES service_ticket(ticket_id)
 );
