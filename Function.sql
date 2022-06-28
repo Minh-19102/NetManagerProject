@@ -6,11 +6,22 @@ BEGIN
 END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION Order() AS
+CREATE OR REPLACE FUNCTION AddTicket(IN stID text, in uname, ) AS
 $$
 BEGIN
+  INSERT INTO service_ticket(staff_id, username) VALUES (stID, uname);
 END;
 $$
 $$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION AddServiceToTicket(IN svID number, IN tTD number, IN soluong) AS
+$$
+BEGIN
+  INSERT INTO service_info(service_id, ticket_id, quantity) VALUES (stID, uname, soluong);
+END;
+$$
+$$ LANGUAGE PLPGSQL;
+
+
 
 ờm sửa ntn à :V
