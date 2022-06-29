@@ -4,7 +4,7 @@ import string
 
 random.seed(1000)
 
-targetFile = open("SampleData.sql", "w")
+targetFile = open("SampleData.sql", "w", encoding="utf8")
 
 userID = []
 staffID1 = []
@@ -15,8 +15,8 @@ comID = []
 
 def create_user():
     targetFile.write("-- User --\n")
-    tenF = open("ten.txt", "r")
-    hoF = open("ho.txt", "r")
+    tenF = open("ten.txt", "r", encoding="utf8")
+    hoF = open("ho.txt", "r", encoding="utf8")
     ten = tenF.read().split('\n')
     ho = hoF.read().split('\n')
     id1 = 0
@@ -55,7 +55,7 @@ create_account()
 
 def create_staff():
     targetFile.write("\n\n\n-- Staff --\n")
-    hoF = open("ho.txt", "r")
+    hoF = open("ho.txt", "r", encoding="utf8")
     ten1 = ["Trọng Quang", "Tiến Đạt", "Văn Trường", "Quang Vũ"]
     ten2 = ["Thị Thanh", "Văn Lâm", "Văn Khoa"]
     ten3 = ["Quỳnh Anh", "Minh Chí", "Thị Liên"]
@@ -104,7 +104,6 @@ create_computer()
 
 def create_service():
     targetFile.write("\n\n\n-- Service --\n")
-    id1 = 0
     servicePrice = {
         "Cofee": [15000, 0],
         "Big coffee": [25000, 0],
