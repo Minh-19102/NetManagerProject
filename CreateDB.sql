@@ -135,7 +135,7 @@ CREATE TABLE service_ticket (
 );
 
 -- ticket_info(service_id, ticket_id, quantity, discount)
-CREATE TABLE service_info (
+CREATE TABLE ticket_info (
 	service_id INT NOT NULL,
 	ticket_id INT NOT NULL,
 	quantity INT NOT NULL,
