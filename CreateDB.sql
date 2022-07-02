@@ -21,6 +21,7 @@ CREATE DATABASE netmanager;
 \c netmanager
 
 -- users(user_id, first_name, last_name, dob, membership)
+CREATE SEQUENCE uidSequence START 100;
 CREATE TABLE users (
 	user_id VARCHAR(20) NOT NULL,
 	first_name VARCHAR(20) NOT NULL,
