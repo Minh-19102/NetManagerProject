@@ -14,20 +14,22 @@ function AccountList() {
 	return (
 		<div>
 			<table>
-				<tr>
-					<th>Username</th>
-					<th>Balance</th>
-					<th>Owner (User's ID)</th>
-				</tr>
-				{AccountData.map((element) => {
-					return (
-						<tr>
-							<td>{element.username}</td>
-							<td>{element.balance}</td>
-							<td>{element.user_id}</td>
-						</tr>
-					)
-				})}
+				<tbody>
+					<tr>
+						<th>Username</th>
+						<th>Balance</th>
+						<th>Owner (User's ID)</th>
+					</tr>
+					{AccountData.map((element) => {
+						return (
+							<tr key={element.username}>
+								<td>{element.username}</td>
+								<td>{element.balance}</td>
+								<td>{element.user_id}</td>
+							</tr>
+						)
+					})}
+				</tbody>
 			</table>
 		</div>
 	)
