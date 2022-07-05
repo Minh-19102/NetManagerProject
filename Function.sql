@@ -28,17 +28,34 @@ BEGIN
 END;
 $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION AddTicket(IN stID text, in uname text) RETURNS TEXT AS
+CREATE OR REPLACE FUNCTION OrderTicket(IN uname text) RETURNS TEXT AS
+$$ DECLARE tkid int;
+BEGIN
+  INSERT INTO service_ticket(username) VALUES (uname);
+  SELECT INTO tkid LASTVAL();
+  IF (SELECT membership FROM users, account WHERE users.user_id = account.user_id 
+    AND account.username = uname and users.membership = 'Y') IS NOT NULL THEN
+      UPDATE service_ticket SET discount = 0.05 WHERE ticket_id = tkid;
+  END IF;
+  RETURN CONCAT('Tạo thành công ticket với ticketID = ', tkid);
+END; $$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION ServeTicket(IN staffID text, IN TkID int) RETURNS TEXT AS
 $$ BEGIN
-  INSERT INTO service_ticket(staff_id, username) VALUES (stID, uname);
+  UPDATE service_ticket SET staff_id = staffID WHERE ticket_id = TkID; 
   RETURN 'Thành công';
 END; $$ LANGUAGE PLPGSQL;
 
 CREATE OR REPLACE FUNCTION AddServiceToTicket( IN tID int, IN svID int, IN soluong int) RETURNS TEXT AS
 $$ 
+DECLARE bought int;
 DECLARE userAge int;
 DECLARE resAge int;
 BEGIN
+  SELECT INTO bought purchased FROM service_ticket WHERE tID = ticket_id;
+  IF bought = 1 THEN
+    RETURN 'Không thể thêm do Ticket đã được thanh toán.';
+  END IF;
   SELECT INTO resAge restrict FROM service WHERE service_id = svID;
   IF resAge = 1 THEN
     SELECT INTO userAge EXTRACT(YEAR FROM AGE(users.dob)) 

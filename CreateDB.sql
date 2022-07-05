@@ -126,7 +126,7 @@ CREATE TABLE service (
 -- service_ticket(ticket_id, (staff_id), (username))
 CREATE TABLE service_ticket (
 	ticket_id SERIAL,
-	staff_id VARCHAR(20) NOT NULL,
+	staff_id VARCHAR(20),
 	username VARCHAR(20) NOT NULL,
   purchased INT DEFAULT 0,
   discount FLOAT DEFAULT 0.0,
