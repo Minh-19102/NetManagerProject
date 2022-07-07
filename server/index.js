@@ -47,6 +47,30 @@ app.post('/recharge', async (req, res) => {
 		console.log(err)
 	}
 })
+
+app.post('/orderTicket', async (req, res) => {
+	try {
+		info = req.body
+		uname = info.username
+		SQLexecute = await pool.query(`SELECT OrderTicket('${uname}');`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/login', async (req, res) => {
+	try {
+		info = req.body
+		username = info.username
+		password = info.password
+		SQLexecute = await pool.query(`SELECT UserLogin('${username}', '${password}');`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
 app.get('/AllUser', async (req, res) => {
 	try {
 		SQLexecute = await pool.query('SELECT * FROM userList;')
@@ -80,6 +104,45 @@ app.get('/usernameList', async (req, res) => {
 app.get('/cashierList', async (req, res) => {
 	try {
 		SQLexecute = await pool.query('SELECT * FROM cashierList;')
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/serverList', async (req, res) => {
+	try {
+		SQLexecute = await pool.query('SELECT * FROM serverList;')
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/uncompletedTicketList', async (req, res) => {
+	try {
+		SQLexecute = await pool.query('SELECT * FROM uncompletedTicket;')
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/serve', async (req, res) => {
+	try {
+		info = req.body
+		ticket_id = info.ticket_id
+		staff_id = info.staff_id
+		SQLexecute = await pool.query(`SELECT ServeTicket('${staff_id}', '${ticket_id}');`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/ticketInfo/:tid', async (req, res) => {
+	try {
+		SQLexecute = await pool.query(`SELECT * FROM GetTicketInfo(${req.params.tid});`)
 		res.json(SQLexecute.rows)
 	} catch (err) {
 		console.log(err.message)
