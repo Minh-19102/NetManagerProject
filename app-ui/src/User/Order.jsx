@@ -16,6 +16,9 @@ function Order() {
 							changeMessage(res.data[0]['orderticket'])
 						})
 					})()
+					setTimeout(() => {
+						window.location.reload()
+					}, 2000)
 				}}>
 				Add Ticket
 			</button>

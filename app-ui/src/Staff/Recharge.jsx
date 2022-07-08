@@ -53,12 +53,10 @@ function Recharge() {
 			<form onSubmit={handleSubmit}>
 				<h3>Chọn người dùng:</h3>
 				<Select options={userList} onChange={changeUser} />
-				{console.log(selectedUser.value)}
 				<h3>Chọn nhân viên:</h3>
 				<Select options={cashierList} onChange={changeCashier} />
-				{console.log(selectedCashier.value)}
+				<h3>Số tiền nạp</h3>
 				<input type='number' placeholder='Enter amount of money (VND)' onChange={handleAmountChange} />
-				{console.log(amountMoney)}
 				<input type='submit' value='Purchase' />
 			</form>
 			<h4> Trạng thái: {message !== '' && message}</h4>

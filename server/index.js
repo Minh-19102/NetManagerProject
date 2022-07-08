@@ -80,6 +80,17 @@ app.get('/AllUser', async (req, res) => {
 	}
 })
 
+app.post('/userBalance', async (req, res) => {
+	try {
+		info = req.body
+		username = info.username
+		SQLexecute = await pool.query(`SELECT balance FROM account WHERE username = '${username}';`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
 app.get('/AllAccount', async (req, res) => {
 	try {
 		SQLexecute = await pool.query('SELECT * FROM account;')
@@ -143,6 +154,48 @@ app.post('/serve', async (req, res) => {
 app.get('/ticketInfo/:tid', async (req, res) => {
 	try {
 		SQLexecute = await pool.query(`SELECT * FROM GetTicketInfo(${req.params.tid});`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/listTicketByUsername/:uname', async (req, res) => {
+	try {
+		SQLexecute = await pool.query(`SELECT * FROM GetTicketListByUsername('${req.params.uname}');`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/listAllService', async (req, res) => {
+	try {
+		SQLexecute = await pool.query(`SELECT * FROM service;`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/UpdateServiceTicket', async (req, res) => {
+	try {
+		info = req.body
+		ticket_id = info.ticket_id
+		service_id = info.service_id
+		amount = info.amount
+		SQLexecute = await pool.query(`SELECT UpdateServiceTicket(${ticket_id}, ${service_id}, ${amount});`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/purchase', async (req, res) => {
+	try {
+		info = req.body
+		ticket_id = info.ticket_id
+		SQLexecute = await pool.query(`SELECT TicketPay(${ticket_id})`)
 		res.json(SQLexecute.rows)
 	} catch (err) {
 		console.log(err.message)

@@ -32,7 +32,7 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION GetTicketListByUsername(IN uname text) RETURNS TABLE (tkid int) AS
 $$
 BEGIN
-  RETURN QUERY SELECT ticket_id as tkid FROM service_ticket WHERE username = uname AND purchased = 0;
+  RETURN QUERY SELECT ticket_id as tkid FROM service_ticket WHERE username = uname;
 END;
 $$ LANGUAGE PLPGSQL;
 
@@ -63,12 +63,11 @@ $$ BEGIN
   RETURN 'Thành công';
 END; $$ LANGUAGE PLPGSQL;
 
-CREATE OR REPLACE FUNCTION GetTicketInfo(IN tkid int) RETURNS TABLE (svid int, sl int) AS
-$$
-BEGIN
-  RETURN QUERY SELECT service_id, quantity FROM ticket_info WHERE ticket_id = tkid;
-END;
-$$ LANGUAGE PLPGSQL;
+CREATE OR REPLACE FUNCTION GetTicketInfo(integer) RETURNS TABLE (svid int,name text, sl int) AS
+'SELECT service.service_id, service.name, quantity 
+  FROM service JOIN ticket_info on ticket_info.service_id = service.service_id
+	AND ticket_id = $1;'
+LANGUAGE SQL;
 
 CREATE OR REPLACE FUNCTION UpdateServiceTicket( IN tID int, IN svID int, IN soluong int) RETURNS TEXT AS
 $$ 
@@ -83,10 +82,10 @@ BEGIN
   SELECT INTO resAge restrict FROM service WHERE service_id = svID;
   IF resAge = 1 THEN
     SELECT INTO userAge EXTRACT(YEAR FROM AGE(users.dob)) 
-      FROM users join service_ticket ON users.username = service_ticket.username
-      WHERE service_ticket = tID;
+      FROM account, users, service_ticket
+      WHERE account.username = service_ticket.username AND account.user_id = users.user_id AND ticket_id = tID;
     IF userAge < 18 THEN
-      RETURN "Không thể thêm order do không đủ tuổi.";
+      RETURN 'Không thể thêm order do không đủ tuổi.';
     END IF;
   END IF;
   IF soluong = 0 THEN
@@ -103,12 +102,14 @@ CREATE OR REPLACE FUNCTION TicketPay(IN ticketID int) RETURNS TEXT AS
 $$ DECLARE checkTicket int;
 DECLARE totalbalance int;
 DECLARE totalCost int;
+DECLARE disct float;
 BEGIN
   SELECT INTO checkTicket purchased FROM service_ticket WHERE ticket_id = ticketID;
   IF checkTicket = 0 THEN 
     SELECT INTO totalbalance balance FROM service_ticket, account
       WHERE ticket_id = ticketID AND account.username = service_ticket.username;
-    SELECT INTO totalCost SUM(service.price * ticket_info.quantity)*(1-discount) FROM ticket_info, service, service_ticket
+    SELECT INTO disct discount FROM service_ticket WHERE ticket_id = ticketID;
+    SELECT INTO totalCost SUM(service.price * ticket_info.quantity)*(1.0-disct) FROM ticket_info, service, service_ticket
       WHERE service_ticket.ticket_id = ticketID AND ticket_info.service_id = service.service_id AND service_ticket.ticket_id = ticket_info.ticket_id;
     
     IF totalbalance < totalCost THEN
@@ -121,7 +122,7 @@ BEGIN
 
     UPDATE service_ticket 
       SET purchased = 1
-      WHERE username = (SELECT username FROM service_ticket WHERE ticket_id = ticketID);
+      WHERE username = (SELECT username FROM service_ticket WHERE ticket_id = ticketID) AND ticket_id = ticketID;
       
   ELSE 
     RETURN 'Ticket đã được thanh toán trước đó';

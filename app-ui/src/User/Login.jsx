@@ -21,6 +21,9 @@ function Login() {
 								if (res.data[0]['userlogin'] === 1) {
 									changeMessage('Đăng nhập thành công.')
 									localStorage.setItem('user', username)
+									setTimeout(() => {
+										window.location.reload()
+									}, 2000)
 								} else {
 									changeMessage('Đăng nhập không thành công.')
 								}
