@@ -8,7 +8,8 @@ function Order() {
 		changeUser(localStorage.getItem('user'))
 	}, [])
 	return (
-		<div>
+		<div className='Order'>
+			<h2>Thêm Ticket</h2>
 			<button
 				onClick={() => {
 					;(async () => {

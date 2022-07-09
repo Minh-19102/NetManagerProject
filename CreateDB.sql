@@ -1,21 +1,3 @@
--- TABLE DEFINITION
--- users(user_id, first_name, last_name, dob, membership) 
--- account(username, password, balance, (user_id))
--- computer(computer_id, condition, (username))
--- session(session_id, login_time, end_time, (username),(computer_id))
--- app_install(app_id,name,(session_id))
--- error(error_id,error (session_id))
--- fix(computer_id, staff_id, date, bug, cost)
-
--- staff(staff_id, first_name, last_name, dob, gender, role, email, tele, salary)
--- service_ticket(ticket_id, (staff_id), (username))
--- service(service_id, name, price)
--- recharge(staff_id,username, amount)
--- ticket_info(service_id, ticket_id, quantity, discount)
-
-
--- ================================================================================
-
 DROP DATABASE IF EXISTS netmanager; 
 CREATE DATABASE netmanager;
 \c netmanager
@@ -45,42 +27,35 @@ CREATE TABLE account (
 -- computer(computer_id, condition, (username))
 CREATE TABLE computer (
 	computer_id VARCHAR(20),
-	condition CHAR(1) DEFAULT '0' NOT NULL,
+	condition INT DEFAULT 0 NOT NULL,
 	CONSTRAINT computer_pk PRIMARY KEY (computer_id),
-	CONSTRAINT computer_check_condition CHECK (condition ='0' or condition ='1')
+	CONSTRAINT computer_check_condition CHECK (condition >=0 and condition <=9)
 );
 
 -- session(session_id, login_time, end_time, (username),(computer_id))
 CREATE TABLE session (
-	session_id INT NOT NULL,
+	session_id SERIAL,
 	login_time timestamp NOT NULL,
-	end_time timestamp,
+	logout_time timestamp,
 	username VARCHAR(20) NOT NULL,
 	computer_id VARCHAR(20) NOT NULL,
+  error VARCHAR(150),
 	CONSTRAINT session_pk PRIMARY KEY (session_id),
 	CONSTRAINT session_fk_username FOREIGN KEY (username) REFERENCES account(username),
 	CONSTRAINT session_fk_computer_id FOREIGN KEY (computer_id) REFERENCES computer(computer_id)
 );
 
-
--- error(error, (session_id))
-CREATE TABLE error (
-	error_id INT,
-	session_id INT NOT NULL,
-	error CHAR(1),
-
-	CONSTRAINT error_pk PRIMARY KEY (error_id),
-	CONSTRAINT error_fk_session_id FOREIGN KEY (session_id) REFERENCES session(session_id),
-	CONSTRAINT error_check CHECK (error='0' or error='1') 
+CREATE TABlE app(
+	app_id SERIAL,
+	name VARCHAR(40) NOT NULL,
+	CONSTRAINT app_pk PRIMARY KEY (app_id)
 );
 
--- app_install(app_id,name,(session_id))
-CREATE TABlE app_install(
+CREATE TABlE app_use(
 	app_id INT NOT NULL,
-	name char(20) NOT NULL,
 	session_id INT NOT NULL,
-	CONSTRAINT app_install_pk PRIMARY KEY (app_id),
-	CONSTRAINT app_install_fk FOREIGN KEY (session_id) REFERENCES session(session_id)
+	CONSTRAINT app_id_fk FOREIGN KEY (app_id) REFERENCES app(app_id),
+	CONSTRAINT session_id_fk FOREIGN KEY (session_id) REFERENCES session(session_id)
 );
 
 -- staff(staff_id, first_name, last_name, dob, gender, role, email, tele, salary)
@@ -97,6 +72,7 @@ CREATE TABLE recharge (
   recharge_id SERIAL,
 	username VARCHAR(20) NOT NULL,
 	amount INT NOT NULL,
+  recharge_time timestamp,
 	staff_id VARCHAR(20) NOT NULL,
 	CONSTRAINT recharge_pk FOREIGN KEY (username) REFERENCES account(username),
 	CONSTRAINT recharge_staff_id_fk FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
@@ -128,6 +104,7 @@ CREATE TABLE service_ticket (
 	ticket_id SERIAL,
 	staff_id VARCHAR(20),
 	username VARCHAR(20) NOT NULL,
+  purchase_time TIMESTAMP,
   purchased INT DEFAULT 0,
   discount FLOAT DEFAULT 0.0,
   CONSTRAINT purchased_check CHECK (purchased=0 or purchased=1),

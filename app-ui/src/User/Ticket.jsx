@@ -79,14 +79,16 @@ function Recharge() {
 		;(async () => {
 			await axios.post(serverURL.defaultURL + `purchase`, { ticket_id: ticket.value }).then((res) => {
 				changeMessage(res.data[0]['ticketpay'])
+				if (message == 'Thành công') {
+					setTimeout(() => {
+						window.location.reload()
+					}, 2000)
+				}
 			})
 		})()
-		setTimeout(() => {
-			window.location.reload()
-		}, 2000)
 	}
 	return (
-		<div>
+		<div className='Ticket'>
 			<hr />
 			<h2>Chọn Ticket</h2>
 			<Select options={ticketList} onChange={changeTicket} />
@@ -122,6 +124,8 @@ function Recharge() {
 				<input type='submit' value='Update' />
 			</form>
 			<hr />
+			<h4> Trạng thái: {message !== '' && message}</h4>
+			<hr />
 			<h2>Thông tin các service</h2>
 			<table>
 				<tbody>
@@ -143,8 +147,6 @@ function Recharge() {
 					})}
 				</tbody>
 			</table>
-			<h4> Trạng thái: {message !== '' && message}</h4>
-			{console.log(ticket.value, selectService.value, amount)}
 		</div>
 	)
 }
