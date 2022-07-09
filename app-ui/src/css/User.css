@@ -1,0 +1,13 @@
+.FeatureContainer {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	gap: 10vw;
+	padding-top: 20px;
+}
+.TicketContainer {
+	width: 40vw;
+}
+.ComputerContainer {
+	width: 40vw;
+}

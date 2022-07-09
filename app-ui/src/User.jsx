@@ -3,14 +3,20 @@ import { useState, useEffect } from 'react'
 import Login from './User/Login'
 import Order from './User/Order'
 import Ticket from './User/Ticket'
+import ComputerLogin from './User/ComputerLogin'
 import serverURL from './serverURL'
+import './css/User.css'
 import axios from 'axios'
+import AppUsing from './User/AppUsing'
+import ReportError from './User/ReportError'
 
 function User() {
 	const [user, changeUser] = useState('')
 	const [bl, changeBl] = useState(0)
+	const [session, changeSession] = useState('')
 	useEffect(() => {
 		changeUser(localStorage.getItem('user'))
+		changeSession(localStorage.getItem('session'))
 	}, [])
 	useEffect(() => {
 		;(async () => {
@@ -34,8 +40,21 @@ function User() {
 						Logout
 					</button>
 					<h3>Số dư của bạn là: {bl}</h3>
-					<Order />
-					<Ticket />
+					<div className='FeatureContainer'>
+						<div className='TicketContainer'>
+							<Order />
+							<Ticket />
+						</div>
+						<div className='ComputerContainer'>
+							<ComputerLogin />
+							{session && (
+								<div>
+									<AppUsing />
+									<ReportError />
+								</div>
+							)}
+						</div>
+					</div>
 				</div>
 			)}
 		</div>

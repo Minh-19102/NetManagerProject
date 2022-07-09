@@ -201,3 +201,91 @@ app.post('/purchase', async (req, res) => {
 		console.log(err.message)
 	}
 })
+
+app.get('/computerList', async (req, res) => {
+	try {
+		SQLexecute = await pool.query(`SELECT * FROM computer;`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/computerLogin', async (req, res) => {
+	try {
+		info = req.body
+		username = info.username
+		comID = info.comID
+		SQLexecute = await pool.query(`SELECT CreateSession('${username}', '${comID}', null);`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/computerLogout', async (req, res) => {
+	try {
+		info = req.body
+		sessionID = info.sessionID
+		SQLexecute = await pool.query(`SELECT EndSession('${sessionID}', null);`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/GetComputerIDBySession/:ss', async (req, res) => {
+	try {
+		SQLexecute = await pool.query(`SELECT computer_id FROM session WHERE session_id = ${req.params.ss};`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/AllApp', async (req, res) => {
+	try {
+		SQLexecute = await pool.query(`SELECT * FROM app;`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/UsingApp', async (req, res) => {
+	try {
+		info = req.body
+		ssID = info.session_id
+		appID = info.app_id
+		//console.log(`SELECT AppUse(${ssID}, ${appID});`)
+		SQLexecute = await pool.query(`SELECT AppUse(${ssID}, ${appID});`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/listAppUsingInSession/:ssID', async (req, res) => {
+	try {
+		SQLexecute = await pool.query(
+			`SELECT app.app_id, name FROM app_use, app WHERE app.app_id = app_use.app_id AND session_id = ${req.params.ssID};`,
+		)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/ReportError', async (req, res) => {
+	try {
+		info = req.body
+		ssID = info.session_id
+		error = info.error
+		errorCode = info.errorCode
+		console.log(`SELECT ReportError(${ssID}, '${error}', ${errorCode});`)
+		SQLexecute = await pool.query(`SELECT ReportError(${ssID}, '${error}', ${errorCode});`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})

@@ -126,4 +126,15 @@ def create_service():
 
 create_service()
 
+
+def create_app():
+    targetFile.write("\n\n\n-- App --\n")
+    appNameFile = open("appList.txt", "r", encoding="utf8")
+    appName = appNameFile.read().split('\n')
+    for app in appName:
+        targetFile.write("INSERT INTO app(name) VALUES('{}');\n".format(app))
+
+
+create_app()
+
 targetFile.close()

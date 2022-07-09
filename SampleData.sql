@@ -243,3 +243,48 @@ INSERT INTO service(name, price, restrict) VALUES ('Big ice cream', 20000, 0);
 INSERT INTO service(name, price, restrict) VALUES ('555 tobacco', 26000, 1);
 INSERT INTO service(name, price, restrict) VALUES ('Thang Long tobacco', 10000, 1);
 INSERT INTO service(name, price, restrict) VALUES ('Sai gon silver tobacoo', 15000, 1);
+
+
+
+-- App --
+INSERT INTO app(name) VALUES('Google Chrome');
+INSERT INTO app(name) VALUES('Firefox');
+INSERT INTO app(name) VALUES('Spotify');
+INSERT INTO app(name) VALUES('VLC');
+INSERT INTO app(name) VALUES('Microsoft Office');
+INSERT INTO app(name) VALUES('WPS Office');
+INSERT INTO app(name) VALUES('Adobe Photoshop');
+INSERT INTO app(name) VALUES('Dropbox');
+INSERT INTO app(name) VALUES('Filmora');
+INSERT INTO app(name) VALUES('Adobe After Effects');
+INSERT INTO app(name) VALUES('Skype');
+INSERT INTO app(name) VALUES('Slack');
+INSERT INTO app(name) VALUES('Microsoft Teams');
+INSERT INTO app(name) VALUES('Discord');
+INSERT INTO app(name) VALUES('BlueStack');
+INSERT INTO app(name) VALUES('Notepad++');
+INSERT INTO app(name) VALUES('Diablo 3');
+INSERT INTO app(name) VALUES('League of Legends');
+INSERT INTO app(name) VALUES('Valheim');
+INSERT INTO app(name) VALUES('Valorant');
+INSERT INTO app(name) VALUES('No Man''s Sky');
+INSERT INTO app(name) VALUES('Rainbow Six: Siege');
+INSERT INTO app(name) VALUES('PUBG: Battlegrounds');
+INSERT INTO app(name) VALUES('Monster Hunter World');
+INSERT INTO app(name) VALUES('Overcooked 2');
+INSERT INTO app(name) VALUES('Rocket League');
+INSERT INTO app(name) VALUES('Dead By Daylight');
+INSERT INTO app(name) VALUES('Among Us');
+INSERT INTO app(name) VALUES('Super Smash Bros. Ultimate');
+INSERT INTO app(name) VALUES('Stardew Valley');
+INSERT INTO app(name) VALUES('Apex Legends');
+INSERT INTO app(name) VALUES('GTA Online');
+INSERT INTO app(name) VALUES('Halo Infinite');
+INSERT INTO app(name) VALUES('Forza Horizon 5');
+INSERT INTO app(name) VALUES('Minecraft');
+INSERT INTO app(name) VALUES('Destiny 2');
+INSERT INTO app(name) VALUES('Sea of Thieves');
+INSERT INTO app(name) VALUES('Call of Duty: Warzone');
+INSERT INTO app(name) VALUES('Fall Guys');
+INSERT INTO app(name) VALUES('Mario Kart 8: Deluxe');
+INSERT INTO app(name) VALUES('Fortnite');

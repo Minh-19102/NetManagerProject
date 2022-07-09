@@ -6,11 +6,10 @@ function Login() {
 	const [password, changePassword] = useState('')
 	const [message, changeMessage] = useState('')
 	return (
-		<div>
+		<div className='Login'>
 			<form
 				onSubmit={(e) => {
 					e.preventDefault()
-					console.log(username, password)
 					;(async () => {
 						await axios
 							.post(serverURL.defaultURL + 'login', {
