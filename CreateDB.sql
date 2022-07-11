@@ -80,13 +80,13 @@ CREATE TABLE recharge (
 
 -- fix(computer_id, staff_id, date, bug, cost)
 CREATE TABLE fix (
-	computer_id INT NOT NULL,
+	computer_id VARCHAR(20) NOT NULL,
 	staff_id VARCHAR(20) NOT NULL,
-	date DATE NOT NULL,
+	fix_date DATE NOT NULL,
 	cost INT NOT NULL,
-	bug char(50) NOT NULL,
-	CONSTRAINT staff_id_fk FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
-	
+	bug char(150) NOT NULL,
+	CONSTRAINT staff_id_fk FOREIGN KEY (staff_id) REFERENCES staff(staff_id),
+  CONSTRAINT computer_id_fk FOREIGN KEY (computer_id) REFERENCES computer(computer_id)
 );
 
 -- service(service_id, name, price)

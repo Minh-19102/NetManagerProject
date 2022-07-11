@@ -10,8 +10,8 @@ BEGIN
   IF (SELECT count(*) FROM BeingUsedComputer WHERE username = uname) <> 0 THEN
     RETURN 'Tài khoản hiện đang được login trên máy khác';
   END IF;
-  IF (SELECT balance FROM account WHERE username = uname) < 1000 THEN
-    RETURN 'Số dư tài khoản không đủ (<1000đ) để mở máy';
+  IF (SELECT balance FROM account WHERE username = uname) < 100 THEN
+    RETURN 'Số dư tài khoản không đủ (<100đ) để mở máy';
   END IF;
   IF loginTime is null THEN
     INSERT INTO session(username, computer_id, login_time) VALUES (uname, comid, NOW());
@@ -55,4 +55,40 @@ BEGIN
     WHERE computer_id = (SELECT computer_id FROM session WHERE session_id = ssID);
   RETURN 'Thành công';
 END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION AutoDecreaseBalanceEveryMinute(in CostPerHour int) RETURNS int AS
+$$
+DECLARE uname text;
+BEGIN
+  FOR uname IN SELECT username FROM BeingUsedComputer LOOP
+    UPDATE account SET balance = balance - CostPerHour/60 WHERE username = uname;
+    IF (SELECT balance FROM account WHERE username = uname) <= 0 THEN
+      UPDATE account SET balance = 0 WHERE username = uname;
+    END IF;
+  END LOOP;
+  RETURN 0;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION SeeComputerHistory(in comID text) RETURNS SETOF text AS
+$$
+DECLARE record text;
+BEGIN
+  FOR record IN (SELECT error FROM session WHERE computer_id = comID AND error is not null) LOOP
+    RETURN NEXT record;
+  END LOOP;
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION FixBrokenComputer(in comID text, in staID text, in fix_cost int, in bugDes text) RETURNS text AS
+$$
+BEGIN
+  IF (SELECT condition FROM computer WHERE computer_id = comID) = 0 THEN
+    RETURN 'Máy tính hoạt động bình thường, không cần sửa chữa.';
+  END IF;
+  UPDATE computer SET condition = 0 WHERE computer_id = comID;
+  INSERT INTO fix(staff_id, computer_id, fix_date, cost, bug) VALUES (staID, comID, CURRENT_DATE, fix_cost, bugDes);
+  RETURN 'Thành công';
+  END;
 $$ LANGUAGE PLPGSQL;

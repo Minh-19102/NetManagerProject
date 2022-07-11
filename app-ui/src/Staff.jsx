@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import Fix from './Staff/Fix'
 import Recharge from './Staff/Recharge'
 import ServeOrder from './Staff/ServeOrder'
 function Staff() {
@@ -25,6 +26,7 @@ function Staff() {
 			</button>
 			{mode === 'Cashier' && <Recharge />}
 			{mode === 'Server' && <ServeOrder />}
+			{mode === 'Repairer' && <Fix />}
 		</div>
 	)
 }

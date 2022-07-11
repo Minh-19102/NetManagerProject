@@ -14,17 +14,42 @@ function User() {
 	const [user, changeUser] = useState('')
 	const [bl, changeBl] = useState(0)
 	const [session, changeSession] = useState('')
+	const [message, changeMessage] = useState('')
 	useEffect(() => {
 		changeUser(localStorage.getItem('user'))
 		changeSession(localStorage.getItem('session'))
 	}, [])
 	useEffect(() => {
+		setInterval(
+			(function tmpFunction() {
+				;(async () => {
+					if (user != '') {
+						axios.post(serverURL.defaultURL + `userBalance`, { username: user }).then((res) => {
+							if (res.data.length > 0) changeBl(res.data[0]['balance'])
+						})
+					}
+				})()
+				return tmpFunction
+			})(),
+			15000,
+		)
+	}, [user])
+	useEffect(() => {
+		if (bl == 0 && session != null) {
+			handleEnd()
+		}
+	}, [bl])
+	const handleEnd = () => {
 		;(async () => {
-			axios.post(serverURL.defaultURL + `userBalance`, { username: user }).then((res) => {
-				if (res.data.length > 0) changeBl(res.data[0]['balance'])
+			await axios.post(serverURL.defaultURL + `computerLogout`, { sessionID: session }).then(() => {
+				localStorage.removeItem('session')
+				changeMessage('Hết tiền trong tài khoản, Session hiện tại sẽ tự động kết thúc!')
+				setTimeout(() => {
+					window.location.reload()
+				}, 5000)
 			})
 		})()
-	}, [user])
+	}
 	return (
 		<div>
 			{user == null ? (
@@ -49,6 +74,7 @@ function User() {
 							<ComputerLogin />
 							{session && (
 								<div>
+									{message && <div>{message}</div>}
 									<AppUsing />
 									<ReportError />
 								</div>

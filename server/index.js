@@ -9,6 +9,16 @@ app.listen(5000, () => {
 	console.log('server has started on port 5000')
 })
 
+const autoRun = () => {
+	setInterval(async () => {
+		try {
+			SQLexecute = await pool.query(`SELECT AutoDecreaseBalanceEveryMinute(${6000});`)
+		} catch (err) {
+			console.log(err.message)
+		}
+	}, 60 * 1000)
+}
+autoRun()
 app.post('/createAccount', async (req, res) => {
 	try {
 		info = req.body
@@ -124,6 +134,15 @@ app.get('/cashierList', async (req, res) => {
 app.get('/serverList', async (req, res) => {
 	try {
 		SQLexecute = await pool.query('SELECT * FROM serverList;')
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/repairerList', async (req, res) => {
+	try {
+		SQLexecute = await pool.query('SELECT * FROM repairerList;')
 		res.json(SQLexecute.rows)
 	} catch (err) {
 		console.log(err.message)
@@ -282,8 +301,30 @@ app.post('/ReportError', async (req, res) => {
 		ssID = info.session_id
 		error = info.error
 		errorCode = info.errorCode
-		console.log(`SELECT ReportError(${ssID}, '${error}', ${errorCode});`)
 		SQLexecute = await pool.query(`SELECT ReportError(${ssID}, '${error}', ${errorCode});`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/SeeComputerHistory/:comID', async (req, res) => {
+	try {
+		SQLexecute = await pool.query(`SELECT * FROM SeeComputerHistory('${req.params.comID}');`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/Fix', async (req, res) => {
+	try {
+		info = req.body
+		staID = info.staff_id
+		comID = info.computer_id
+		bug = info.bug_description
+		cost = info.cost
+		SQLexecute = await pool.query(`SELECT FixBrokenComputer('${comID}', '${staID}', ${cost}, '${bug}');`)
 		res.json(SQLexecute.rows)
 	} catch (err) {
 		console.log(err.message)

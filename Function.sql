@@ -39,7 +39,7 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION Recharge(IN stID text, IN uname text, IN a_value int) RETURNS TEXT AS
 $$
 BEGIN
-  INSERT INTO recharge(username, staff_id, amount) VALUES (uname, stID, a_value);
+  INSERT INTO recharge(username, staff_id, amount, recharge_time) VALUES (uname, stID, a_value, NOW());
   UPDATE account SET balance = balance + a_value WHERE username = uname;
   RETURN 'Thành công';
 END;
@@ -106,10 +106,13 @@ DECLARE disct float;
 BEGIN
   SELECT INTO checkTicket purchased FROM service_ticket WHERE ticket_id = ticketID;
   IF checkTicket = 0 THEN 
+    IF (SELECT count(*) FROM ticket_info WHERE ticket_id = ticketID) = 0 THEN
+      RETURN 'Ticket chưa có service nào';
+    END IF;
     SELECT INTO totalbalance balance FROM service_ticket, account
       WHERE ticket_id = ticketID AND account.username = service_ticket.username;
     SELECT INTO disct discount FROM service_ticket WHERE ticket_id = ticketID;
-    SELECT INTO totalCost SUM(service.price * ticket_info.quantity)*(1.0-disct) FROM ticket_info, service, service_ticket
+    SELECT INTO totalCost CAST(SUM(service.price * ticket_info.quantity)*(1.0-disct) AS INT) FROM ticket_info, service, service_ticket
       WHERE service_ticket.ticket_id = ticketID AND ticket_info.service_id = service.service_id AND service_ticket.ticket_id = ticket_info.ticket_id;
     
     IF totalbalance < totalCost THEN
@@ -121,7 +124,7 @@ BEGIN
       WHERE username = (SELECT username FROM service_ticket WHERE ticket_id = ticketID);
 
     UPDATE service_ticket 
-      SET purchased = 1
+      SET purchased = 1, purchase_time = NOW()
       WHERE username = (SELECT username FROM service_ticket WHERE ticket_id = ticketID) AND ticket_id = ticketID;
       
   ELSE 
