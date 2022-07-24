@@ -11,6 +11,19 @@ function UserList() {
 			}
 		})()
 	}, [])
+  const upRank = (userID) => {
+    console.log(userID)
+    ;(async () => {
+			const res = await axios.post(serverURL.defaultURL + 'UpRankUser', {
+        'userID': userID
+      })
+			if (res.status === 200) {
+				setTimeout(() => {
+					window.location.reload()
+				}, 1000)
+			}
+		})()
+  }
 	return (
 		<div>
 			<table>
@@ -21,6 +34,7 @@ function UserList() {
 						<th>First_name</th>
 						<th>Date of birth</th>
 						<th>Membership</th>
+            <th>Rank Up</th>
 					</tr>
 					{UserData.map((element) => {
 						return (
@@ -30,6 +44,7 @@ function UserList() {
 								<td>{element.first_name}</td>
 								<td>{element.dob}</td>
 								<td>{element.membership === 'Y' ? 'Hội viên' : 'Khách hàng'}</td>
+                <td><button onClick={()=>{upRank(element.user_id)}}>Rank Up</button></td>
 							</tr>
 						)
 					})}

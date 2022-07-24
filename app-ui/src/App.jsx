@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import User from './User'
 import Staff from './Staff'
 import Manager from './Manager'
+import './css/App.css'
 function App() {
 	return (
 		<div>
@@ -11,13 +12,13 @@ function App() {
 				<div>
 					<nav>
 						<ul>
-							<li>
+							<li className='nav-link'>
 								<Link to='/user'>User</Link>
 							</li>
-							<li>
+							<li className='nav-link'>
 								<Link to='/staff'>Staff</Link>
 							</li>
-							<li>
+							<li className='nav-link'>
 								<Link to='/manager'>Manager</Link>
 							</li>
 						</ul>

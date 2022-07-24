@@ -1,0 +1,4 @@
+.staff-role {
+  display: flex;
+  flex-direction: row;
+}

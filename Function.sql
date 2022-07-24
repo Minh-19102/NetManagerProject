@@ -10,11 +10,25 @@ $$ LANGUAGE PLPGSQL;
 CREATE OR REPLACE FUNCTION CreateAccount(IN UserID text, IN uname text, IN psw text) RETURNS TEXT AS
 $$
 BEGIN
+  IF (SELECT COUNT(*) FROM users WHERE user_id = UserID) = 0 THEN
+    RETURN 'User không tồn tại';
+  END IF;
   IF (SELECT COUNT(*) FROM account WHERE uname = username) != 0 THEN
     RETURN 'Username đã tồn tại';
   END IF;
   INSERT INTO account (username, password, balance, user_id) 
     VALUES(uname, psw, 0, UserID);
+  RETURN 'Thành công';
+END;
+$$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION UpRankUser(IN UserID text) RETURNS TEXT AS
+$$
+BEGIN
+  IF (SELECT COUNT(*) FROM users WHERE user_id = UserID) = 0 THEN
+    RETURN 'User không tồn tại';
+  END IF;
+  UPDATE users SET membership = 'Y' WHERE user_id = UserID;
   RETURN 'Thành công';
 END;
 $$ LANGUAGE PLPGSQL;

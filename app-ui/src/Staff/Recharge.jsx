@@ -57,6 +57,7 @@ function Recharge() {
 				<Select options={cashierList} onChange={changeCashier} />
 				<h3>Số tiền nạp</h3>
 				<input type='number' placeholder='Enter amount of money (VND)' onChange={handleAmountChange} />
+        <br/>
 				<input type='submit' value='Purchase' />
 			</form>
 			<h4> Trạng thái: {message !== '' && message}</h4>

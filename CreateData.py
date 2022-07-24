@@ -137,4 +137,78 @@ def create_app():
 
 create_app()
 
+from random import randint, randrange
+from datetime import timedelta
+
+
+def random_date(start, end):
+    delta = end - start
+    int_delta = (delta.days * 24 * 60 * 60) + delta.seconds
+    random_second = randrange(int_delta)
+    return start + timedelta(seconds=random_second)
+
+
+def create_recharge():
+    targetFile.write("\n\n\n-- Recharge --\n")
+    NN = 2000
+    ttime = []
+    for i in range(NN):
+        ttime.append(random_date(datetime.datetime(2022, 1, 1), datetime.datetime(2022, 7, 24)))
+    ttime.sort()
+    for i in range(NN):
+        uuname = random.choice(account)
+        sta = random.choice(staffID2)
+        amount = random.randrange(5000, 200000, 1000)
+        targetFile.write("INSERT INTO recharge(username, staff_id, amount, recharge_time) VALUES ('{}', '{}', '{}', '{}');\n".format(
+            uuname, sta, amount, ttime[i]))
+        targetFile.write("UPDATE account SET balance = balance + {} WHERE username = '{}';\n".format(amount, uuname))
+
+
+create_recharge()
+
+
+def create_ticket():
+    targetFile.write("\n\n\n-- Ticket --\n")
+    NN = 1000
+    ttime = []
+    for i in range(NN):
+        ttime.append(random_date(datetime.datetime(2022, 1, 1), datetime.datetime(2022, 7, 24)))
+    ttime.sort()
+    for i in range(NN):
+        uuname = random.choice(account)
+        tkid = i + 1
+        sta = random.choice(staffID3)
+        targetFile.write("\nSELECT OrderTicket('{}');\n".format(uuname))
+        for j in range(0, random.randint(1, 5)):
+            svid = random.randint(1, 11)
+            targetFile.write("SELECT UpdateServiceTicket({}, {}, {}); ".format(tkid, svid, random.randint(1, 5)))
+        targetFile.write("\nSELECT TicketPay({}); SELECT ServeTicket('{}', {});\n".format(tkid, sta, tkid))
+        targetFile.write("UPDATE service_ticket SET purchase_time = '{}' WHERE ticket_id = {};\n".format(ttime[i], tkid))
+
+
+create_ticket()
+
+
+def create_sesion():
+    targetFile.write("\n\n\n-- Session --\n")
+    NN = 5000
+    ssTime = []
+    ssEndTime = []
+    for i in range(NN):
+        ssTime.append(random_date(datetime.datetime(2022, 2, 1), datetime.datetime(2022, 7, 24)))
+    ssTime.sort()
+    for i in range(NN):
+        ssEndTime.append(ssTime[i] + datetime.timedelta(minutes=randint(1, 420)))
+    for i in range(NN):
+        ssID = i+1
+        uuname = random.choice(account)
+        com = random.choice(comID)
+        targetFile.write("\nSELECT CreateSession('{}', '{}', '{}');\n".format(uuname, com, ssTime[i]))
+        for j in range(0, random.randint(1, 8)):
+            targetFile.write("SELECT AppUse({}, {}); ".format(ssID, random.randint(1, 41)))
+        targetFile.write("\nSELECT EndSession('{}', '{}');\n".format(ssID, ssEndTime[i]))
+
+
+create_sesion()
+
 targetFile.close()

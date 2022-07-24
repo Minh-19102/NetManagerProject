@@ -90,6 +90,35 @@ app.get('/AllUser', async (req, res) => {
 	}
 })
 
+app.get('/UserRanking', async (req, res) => {
+	try {
+		SQLexecute = await pool.query('SELECT * FROM UserRanking;')
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.get('/AppRanking', async (req, res) => {
+	try {
+		SQLexecute = await pool.query('SELECT * FROM AppRanking;')
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/UpRankUser', async (req, res) => {
+	try {
+    info = req.body
+		uid = info.userID
+		SQLexecute = await pool.query(`SELECT * FROM UpRankUser('${uid}');`)
+		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
 app.post('/userBalance', async (req, res) => {
 	try {
 		info = req.body

@@ -1,5 +1,5 @@
 CREATE OR REPLACE VIEW userList AS
-SELECT user_id, first_name, last_name, TO_CHAR(dob ::DATE,'dd-mm-yyyy') as dob, membership FROM users;
+SELECT user_id, first_name, last_name, TO_CHAR(dob ::DATE,'dd-mm-yyyy') as dob, membership FROM users ORDER BY(user_id);
 
 CREATE OR REPLACE VIEW usernameList AS
 SELECT username FROM account;
@@ -25,3 +25,16 @@ WHERE account.username = session.username AND computer.computer_id = session.com
 
 CREATE OR REPLACE VIEW BrokenComputer AS
 SELECT computer_id FROM computer WHERE condition <> 0;
+
+CREATE OR REPLACE VIEW AppRanking AS
+SELECT app.app_id, name, count(session_id) from app, app_use
+WHERE app.app_id = app_use.app_id
+GROUP BY app.app_id
+ORDER BY count(session_id) DESC;
+
+CREATE OR REPLACE VIEW UserRanking AS
+SELECT u.user_id, CONCAT(u.last_name ,' ', u.first_name) AS fullname, sum(r.amount) AS "Total Recharge"
+FROM users u, account a, recharge r 
+WHERE u.user_id = a.user_id AND r.username = a.username
+group by u.user_id
+ORDER BY sum(r.amount) DESC;

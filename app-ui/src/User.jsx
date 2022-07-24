@@ -9,6 +9,7 @@ import './css/User.css'
 import axios from 'axios'
 import AppUsing from './User/AppUsing'
 import ReportError from './User/ReportError'
+import AccountRegister from './User/AccountRegister'
 
 function User() {
 	const [user, changeUser] = useState('')
@@ -53,7 +54,12 @@ function User() {
 	return (
 		<div>
 			{user == null ? (
-				<Login />
+        <div>
+          <h1> Đăng nhập</h1>
+				  <Login />
+          <h1>Đăng ký</h1>
+          <AccountRegister/>
+        </div>
 			) : (
 				<div>
 					<h3>Đăng nhập với user: {user}</h3>
@@ -61,6 +67,9 @@ function User() {
 						onClick={() => {
 							localStorage.removeItem('user')
 							changeUser('')
+              setTimeout(() => {
+                window.location.reload()
+              }, 3000)
 						}}>
 						Logout
 					</button>
