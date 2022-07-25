@@ -1,6 +1,11 @@
 DROP DATABASE IF EXISTS netmanager; 
-CREATE DATABASE netmanager;
-\c netmanager
+DROP ROLE IF EXISTS nadmin;
+CREATE DATABASE netmanager ENCODING 'UTF8';
+CREATE ROLE nadmin LOGIN PASSWORD '123456';
+grant all on database netmanager to nadmin;
+\c netmanager nadmin
+
+SET CLIENT_ENCODING TO 'utf8';
 
 -- users(user_id, first_name, last_name, dob, membership)
 CREATE SEQUENCE uidSequence START 100;
