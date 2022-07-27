@@ -3,7 +3,7 @@ $$
 BEGIN
   INSERT INTO users (user_id, first_name, last_name, dob, membership) 
     VALUES(CONCAT('USER',nextval('uidSequence')), Fname, Lname, dateob, 'N');
-  RETURN 'Thành công';
+  RETURN CONCAT('Tạo user thành công, UID = USER', currval('uidSequence'));
 END;
 $$ LANGUAGE PLPGSQL;
 
