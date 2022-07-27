@@ -200,13 +200,22 @@ def create_sesion():
     for i in range(NN):
         ssEndTime.append(ssTime[i] + datetime.timedelta(minutes=randint(1, 420)))
     for i in range(NN):
-        ssID = i+1
+        ssID = i + 1
         uuname = random.choice(account)
         com = random.choice(comID)
         targetFile.write("\nSELECT CreateSession('{}', '{}', '{}');\n".format(uuname, com, ssTime[i]))
         for j in range(0, random.randint(1, 8)):
             targetFile.write("SELECT AppUse({}, {}); ".format(ssID, random.randint(1, 41)))
-        targetFile.write("\nSELECT EndSession('{}', '{}');\n".format(ssID, ssEndTime[i]))
+        errChange = random.random()
+        if errChange < 0.01:
+            targetFile.write("\nSELECT ReportError({}, '{}', {});\n".format(ssID, ''.join(random.choice(string.ascii_lowercase) for xx in range(30)),
+                                                                            random.randint(1, 9)))
+            targetFile.write("INSERT INTO fix(staff_id, computer_id, fix_date, cost, bug) VALUES ('{}', '{}', '{}', {}, '{}');".format(
+                random.choice(staffID1), com,
+                str(ssEndTime[i]).split(' ')[0],
+                random.randint(50, 1100) * 1000, ''.join(random.choice(string.ascii_lowercase) for xx in range(30))))
+            targetFile.write("UPDATE computer SET condition = 0 WHERE computer_id = '{}';".format(com))
+        targetFile.write("\nSELECT EndSession({}, '{}');\n".format(ssID, ssEndTime[i]))
 
 
 create_sesion()

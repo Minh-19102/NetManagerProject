@@ -111,6 +111,7 @@ CREATE TABLE service_ticket (
 	username VARCHAR(20) NOT NULL,
   purchase_time TIMESTAMP,
   purchased INT DEFAULT 0,
+  total INT DEFAULT 0,
   discount FLOAT DEFAULT 0.0,
   CONSTRAINT purchased_check CHECK (purchased=0 or purchased=1),
 	CONSTRAINT ticket_pk PRIMARY KEY (ticket_id),

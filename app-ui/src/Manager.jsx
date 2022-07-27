@@ -4,6 +4,7 @@ import AccountList from './Manager/AccountList'
 import UserList from './Manager/UserList'
 import UserRanking from './Manager/UserRanking'
 import AppRanking from './Manager/AppRanking'
+import Summary from './Manager/Summary'
 import './css/Manager.css'
 function Manager() {
 	const [display, changeDisplay] = useState(0)
@@ -37,11 +38,19 @@ function Manager() {
 				}}>
 				App Ranking
 			</button>
+
+      <button
+				onClick={() => {
+					changeDisplay('Summary')
+				}}>
+				Summary
+			</button>
       </div>
 			{display === 'AccountList' && <AccountList />}
 			{display === 'UserList' && <UserList />}
       {display === 'UserRanking' && <UserRanking />}
       {display === 'AppRanking' && <AppRanking />}
+      {display === 'Summary' && <Summary/>}
 		</div>
 	)
 }

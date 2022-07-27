@@ -138,7 +138,7 @@ BEGIN
       WHERE username = (SELECT username FROM service_ticket WHERE ticket_id = ticketID);
 
     UPDATE service_ticket 
-      SET purchased = 1, purchase_time = NOW()
+      SET purchased = 1, purchase_time = NOW(), total = totalCost
       WHERE username = (SELECT username FROM service_ticket WHERE ticket_id = ticketID) AND ticket_id = ticketID;
       
   ELSE 

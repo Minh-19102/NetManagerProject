@@ -110,7 +110,7 @@ app.get('/AppRanking', async (req, res) => {
 
 app.post('/UpRankUser', async (req, res) => {
 	try {
-    info = req.body
+		info = req.body
 		uid = info.userID
 		SQLexecute = await pool.query(`SELECT * FROM UpRankUser('${uid}');`)
 		res.json(SQLexecute.rows)
@@ -355,6 +355,34 @@ app.post('/Fix', async (req, res) => {
 		cost = info.cost
 		SQLexecute = await pool.query(`SELECT FixBrokenComputer('${comID}', '${staID}', ${cost}, '${bug}');`)
 		res.json(SQLexecute.rows)
+	} catch (err) {
+		console.log(err.message)
+	}
+})
+
+app.post('/Summary', async (req, res) => {
+	try {
+		info = req.body
+		start = info.start + ' 00:00:00'
+		end = info.end + ' 23:59:59'
+		SQLexecute1 = await pool.query(
+			`SELECT SUM(amount) AS "RSUM" FROM recharge WHERE recharge_time BETWEEN '${start}' AND '${end}';`,
+		)
+		SQLexecute2 = await pool.query(
+			`SELECT SUM(AGE(logout_time, login_time)) AS "TimeSUM" from session where login_time BETWEEN '${start}' and '${end}';`,
+		)
+		SQLexecute3 = await pool.query(
+			`SELECT SUM(total) AS "SVSUM" FROM service_ticket WHERE purchase_time BETWEEN '${start}' and '${end}';`,
+		)
+		SQLexecute4 = await pool.query(
+			`SELECT SUM(cost) AS "CSUM" FROM fix WHERE fix_date BETWEEN '${start}' and '${end}';`,
+		)
+		res.json([
+			SQLexecute1.rows[0]['RSUM'],
+			SQLexecute2.rows[0]['TimeSUM'],
+			SQLexecute3.rows[0]['SVSUM'],
+			SQLexecute4.rows[0]['CSUM'],
+		])
 	} catch (err) {
 		console.log(err.message)
 	}
