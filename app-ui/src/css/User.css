@@ -1,13 +1,44 @@
-.FeatureContainer {
+.Ticket {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
-	gap: 10vw;
+  width: 100%;
+	gap: 20px;
 	padding-top: 20px;
 }
-.TicketContainer {
-	width: 40vw;
+.Ticket > div {
+  width: 35vw;
 }
 .ComputerContainer {
-	width: 40vw;
+	width: 100%;
+}
+
+.ticketTable{
+  width: 100%;
+  text-align: center;
+}
+
+.serviceTable{
+  width: 100%;
+  text-align: center;
+}
+
+.computer-select-ctn{
+  display: flex;
+	flex-direction: row;
+  justify-items: center;
+  gap: 30px;
+	padding-top: 20px;
+}
+.computer-select-ctn > div{
+  min-width: 30vw;
+}
+
+.textarea {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  resize: both;
+  min-height: 40px;
+  line-height: 20px;
 }

@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import serverURL from '../serverURL'
+import { message } from 'antd'
 function Order() {
-	const [selectedUser, changeUser] = useState('')
-	const [Message, changeMessage] = useState('')
+  const [selectedUser, changeUser] = useState('')
 	useEffect(() => {
 		changeUser(localStorage.getItem('user'))
 	}, [])
@@ -14,7 +14,7 @@ function Order() {
 				onClick={() => {
 					;(async () => {
 						await axios.post(serverURL.defaultURL + 'orderTicket', { username: selectedUser }).then((res) => {
-							changeMessage(res.data[0]['orderticket'])
+              message.info(res.data[0]['orderticket'])
 						})
 					})()
 					setTimeout(() => {
@@ -22,8 +22,7 @@ function Order() {
 					}, 2000)
 				}}>
 				Add Ticket
-			</button>
-			<h3>Trạng thái: {Message}</h3>
+      </button>
 		</div>
 	)
 }

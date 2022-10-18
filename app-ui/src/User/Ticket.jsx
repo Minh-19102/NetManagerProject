@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import serverURL from '../serverURL'
 import Select from 'react-select'
+import { message } from 'antd'
 
 function Recharge() {
 	const [user, changeUser] = useState(localStorage.getItem('user'))
@@ -11,8 +12,7 @@ function Recharge() {
 	const [selectService, changeService] = useState('')
 	const [ticketList, changeTicketList] = useState([])
 	const [ticket, changeTicket] = useState(0)
-	const [amount, changeAmount] = useState(0)
-	const [message, changeMessage] = useState('')
+  const [amount, changeAmount] = useState(0)
 	useEffect(() => {
 		;(async () => {
 			await axios.get(serverURL.defaultURL + `listTicketByUsername/${user}`).then((res) => {
@@ -42,8 +42,7 @@ function Recharge() {
 	}, [])
 	useEffect(() => {
 		;(async () => {
-			await axios.get(serverURL.defaultURL + `ticketInfo/${ticket.value}`).then((res) => {
-				console.log(res.data)
+      await axios.get(serverURL.defaultURL + `ticketInfo/${ticket.value}`).then((res) => {
 				changeServiceList(
 					res.data.map((element) => {
 						element['value'] = element['label'] = element['svid']
@@ -67,33 +66,33 @@ function Recharge() {
 					amount: amount,
 				})
 				.then((res) => {
-					changeMessage(res.data[0]['updateserviceticket'])
+          message.info(res.data[0]['updateserviceticket'])
 					let tmp = ticket.value
-					changeTicket(0)
-					changeTicket({ value: tmp })
+          changeTicket({ value: 0 })
+          changeTicket({ value: tmp })
 				})
 		})()
 	}
 	const handlePurchase = async (e) => {
 		e.preventDefault()
 		;(async () => {
-			await axios.post(serverURL.defaultURL + `purchase`, { ticket_id: ticket.value }).then((res) => {
-				changeMessage(res.data[0]['ticketpay'])
-				if (message == 'Thành công') {
-					setTimeout(() => {
-						window.location.reload()
-					}, 2000)
-				}
+      await axios.post(serverURL.defaultURL + `purchase`, { ticket_id: ticket.value }).then((res) => {
+        if (res.data[0]['ticketpay'] === 'Thành công') {
+          message.success(res.data[0]['ticketpay'])
+        }
+        else {
+          message.warn(res.data[0]['ticketpay'])
+        }
 			})
 		})()
 	}
 	return (
 		<div className='Ticket'>
-			<hr />
+      <div>
 			<h2>Chọn Ticket</h2>
 			<Select options={ticketList} onChange={changeTicket} />
 			<h3>Thông tin Ticket: </h3>
-			<table>
+        <table className='ticketTable'>
 				<tbody>
 					<tr>
 						<th>Service ID</th>
@@ -112,7 +111,7 @@ function Recharge() {
 				</tbody>
 			</table>
 			<form onSubmit={handlePurchase}>
-				<input type='submit' value='Purchased' />
+          <input type='submit' value='Purchase' />
 			</form>
 			<hr />
 			<h2>Thay đổi thông tin ticket</h2>
@@ -124,29 +123,30 @@ function Recharge() {
 				<input type='submit' value='Update' />
 			</form>
 			<hr />
-			<h4> Trạng thái: {message !== '' && message}</h4>
-			<hr />
-			<h2>Thông tin các service</h2>
-			<table>
-				<tbody>
-					<tr>
-						<th>Service ID</th>
-						<th>Name</th>
-						<th>Price</th>
-						<th>Restrict</th>
-					</tr>
-					{serviceInfo.map((element) => {
-						return (
-							<tr key={element.value}>
-								<td>{element.value}</td>
-								<td>{element.name}</td>
-								<td>{element.price}</td>
-								<td>{element.restrict}</td>
-							</tr>
-						)
-					})}
-				</tbody>
-			</table>
+      </div>
+      <div>
+        <h2 >Thông tin các service</h2>
+        <table className='serviceTable'>
+          <tbody>
+            <tr>
+              <th>Service ID</th>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Restrict</th>
+            </tr>
+            {serviceInfo.map((element) => {
+              return (
+                <tr key={element.value}>
+                  <td>{element.value}</td>
+                  <td>{element.name}</td>
+                  <td>{element.price}</td>
+                  <td>{element.restrict}</td>
+                </tr>
+              )
+            })}
+          </tbody>
+        </table>
+      </div>
 		</div>
 	)
 }

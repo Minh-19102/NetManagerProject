@@ -55,11 +55,11 @@ function ReportError() {
 		})()
 	}
 	return (
-		<div>
+    <div className='Report'>
 			<h2>Báo cáo sự cố</h2>
 			<form onSubmit={handleSubmit}>
 				<h4>Mô tả lỗi</h4>
-				<textarea placeholder='Mô tả lỗi' value={error} onChange={handleChangeError} rows='4' cols='50' />
+        <textarea className='textarea' placeholder='Mô tả lỗi' value={error} onChange={handleChangeError} rows='4' cols='50' />
 				<h4>Mã lỗi</h4>
 				<input type='number' min={1} max={9} required onChange={handleChangeErrorCode} />
 				<br />

@@ -1,6 +1,5 @@
 import React from 'react'
 import { useState, useEffect } from 'react'
-import Login from './User/Login'
 import Order from './User/Order'
 import Ticket from './User/Ticket'
 import ComputerLogin from './User/ComputerLogin'
@@ -9,19 +8,42 @@ import './css/User.css'
 import axios from 'axios'
 import AppUsing from './User/AppUsing'
 import ReportError from './User/ReportError'
-import AccountRegister from './User/AccountRegister'
-
+import { Layout, Menu, PageHeader, Tag } from 'antd'
+import { DesktopOutlined, CoffeeOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons'
+const { Header, Content, Footer, Sider } = Layout;
+function getItem(label, key, icon) {
+  return {
+    key,
+    icon,
+    label,
+  };
+}
+const items = [
+  getItem('Computer Select', '1', <DesktopOutlined />),
+  getItem('Order', '2', < CoffeeOutlined />),
+  getItem('Logout', '3', <LogoutOutlined />)
+]
 function User() {
 	const [user, changeUser] = useState('')
 	const [bl, changeBl] = useState(0)
 	const [session, changeSession] = useState('')
 	const [message, changeMessage] = useState('')
+  const [showPage, changeShowPage] = useState(false)
+  const [menuKey, setMenuKey] = useState(1)
 	useEffect(() => {
 		changeUser(localStorage.getItem('user'))
 		changeSession(localStorage.getItem('session'))
 	}, [])
 	useEffect(() => {
-		setInterval(
+    if (user == null) {
+      window.location.replace('user/login')
+    }
+    else {
+      setTimeout(() => {
+        changeShowPage(true)
+      }, 500)
+    }
+    setInterval(
 			(function tmpFunction() {
 				;(async () => {
 					if (user != '') {
@@ -51,48 +73,61 @@ function User() {
 			})
 		})()
 	}
+
 	return (
-		<div>
-			{user == null ? (
-        <div>
-          <h1> Đăng nhập</h1>
-				  <Login />
-          <h1>Đăng ký</h1>
-          <AccountRegister/>
-        </div>
-			) : (
-				<div>
-					<h3>Đăng nhập với user: {user}</h3>
-					<button
+    <Layout
+      style={{
+        minHeight: '80vh',
+      }}
+    >
+      <Sider theme='light' collapsed={true} >
+        <div className="logo" />
+        <Menu theme="light" defaultSelectedKeys={['1']} mode="inline" items={items}
+          onClick={(e) => setMenuKey(e.key)}
+        />
+      </Sider>
+      <Layout className="site-layout">
+        <PageHeader
+          style={{ 'font-size': '32px' }}
+          backIcon={false}
+          className="site-page-header"
+          title={<UserOutlined style={{ 'font-size': '32px' }} />}
+          subTitle={user}
+          tags={<Tag style={{ 'font-size': '20px' }} color="blue">{`balance: ${bl}`}</Tag>}
+        />
+        <Content
+          style={{
+            margin: '0 16px',
+          }}
+        >
+          {menuKey == '1' && <div className='ComputerContainer'>
+            <ComputerLogin />
+            {session && (
+              <div className='computer-select-ctn'>
+                <AppUsing />
+                <ReportError />
+              </div>
+            )}
+          </div>}
+          {menuKey == '2' && <div className='TicketContainer'>
+            <Order />
+            <Ticket />
+          </div>}
+          {menuKey == '3' && <div className='Logout'>
+            <button
 						onClick={() => {
 							localStorage.removeItem('user')
 							changeUser('')
               setTimeout(() => {
                 window.location.reload()
-              }, 3000)
+              }, 500)
 						}}>
 						Logout
-					</button>
-					<h3>Số dư của bạn là: {bl}</h3>
-					<div className='FeatureContainer'>
-						<div className='TicketContainer'>
-							<Order />
-							<Ticket />
-						</div>
-						<div className='ComputerContainer'>
-							<ComputerLogin />
-							{session && (
-								<div>
-									{message && <div>{message}</div>}
-									<AppUsing />
-									<ReportError />
-								</div>
-							)}
-						</div>
-					</div>
-				</div>
-			)}
-		</div>
+            </button>
+          </div>}
+        </Content>
+      </Layout>
+    </Layout>
 	)
 }
 

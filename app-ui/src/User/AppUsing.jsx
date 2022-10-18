@@ -45,7 +45,7 @@ function AppUsing() {
 		})()
 	}
 	return (
-		<div>
+    <div className='AppUsing'>
 			<h3>Chọn app bạn muốn sử dụng</h3>
 			<Select options={appList} onChange={changeSelectApp}></Select>
 			<button onClick={handleUsing}>Open App</button>

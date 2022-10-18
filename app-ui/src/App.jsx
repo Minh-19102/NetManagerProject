@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import User from './User'
 import Staff from './Staff'
 import Manager from './Manager'
+import Login from './User/Login'
+import AccountRegister from './User/AccountRegister'
 import './css/App.css'
 function App() {
 	return (
@@ -25,6 +27,8 @@ function App() {
 					</nav>
 					<Routes>
 						<Route path='/user' element={<User />} />
+            <Route path='/user/login' element={<Login />} />
+            <Route path='/user/register' element={<AccountRegister />} />
 						<Route path='/staff' element={<Staff />} />
 						<Route path='/manager' element={<Manager />} />
 					</Routes>
