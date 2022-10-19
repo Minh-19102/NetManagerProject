@@ -377,12 +377,14 @@ app.post('/Summary', async (req, res) => {
 		SQLexecute4 = await pool.query(
 			`SELECT SUM(cost) AS "CSUM" FROM fix WHERE fix_date BETWEEN '${start}' and '${end}';`,
 		)
+    SQLexecute5 = await pool.query(`SELECT * FROM SummaryRechargeByDate('${start}', '${end}');`);
 		res.json([
-			SQLexecute1.rows[0]['RSUM'],
-			SQLexecute2.rows[0]['TimeSUM'],
-			SQLexecute3.rows[0]['SVSUM'],
-			SQLexecute4.rows[0]['CSUM'],
-		])
+      SQLexecute1.rows[0]["RSUM"],
+      SQLexecute2.rows[0]["TimeSUM"],
+      SQLexecute3.rows[0]["SVSUM"],
+      SQLexecute4.rows[0]["CSUM"],
+      SQLexecute5.rows,
+    ]);
 	} catch (err) {
 		console.log(err.message)
 	}

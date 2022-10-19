@@ -3,17 +3,19 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import serverURL from '../serverURL'
 import Select from 'react-select'
+import { message } from 'antd'
+
 const errorCode = {
-	0: 'Bình thường',
-	1: 'Hỏng màn hình',
-	2: 'Hỏng chuột/bàn phím',
-	3: 'Không thể khởi động',
-	4: 'Không thể đăng nhập',
-	5: 'Lỗi màn hình xanh',
-	6: 'Nguồn điện không hoạt động',
-	7: 'Lỗi phần mềm',
-	8: 'Nhiều hơn 1 lỗi',
-	9: 'Khác',
+  0: 'Normal',
+  1: 'Broken screen',
+  2: 'Broken mouse/keyboard',
+  3: 'Unable to start',
+  4: 'Can not login',
+  5: 'Blue screen error',
+  6: 'Power supply not working',
+  7: 'Software error',
+  8: 'More than 1 error',
+  9: 'Other',
 }
 function Fix() {
 	const [computerList, changeComputerList] = useState([])
@@ -21,8 +23,7 @@ function Fix() {
 	const [repairerList, changeRepairerList] = useState([])
 	const [selectedRepairer, changeRepairer] = useState('')
 	const [computerHistory, changeComputerHistory] = useState([])
-	const [amountMoney, changeAmount] = useState(0)
-	const [message, changeMessage] = useState('')
+  const [amountMoney, changeAmount] = useState(0)
 	const [error, changeError] = useState('')
 	useEffect(() => {
 		;(async () => {
@@ -72,34 +73,39 @@ function Fix() {
 				cost: amountMoney,
 			})
 			.then((res) => {
-				changeMessage(res.data[0]['fixbrokencomputer'])
-				if (message === 'Thành công') {
-					setTimeout(() => {
-						window.location.reload()
-					}, 3000)
-				}
+        if (res.data[0]['fixbrokencomputer'] === 'Thành công') {
+          message.success(res.data[0]['fixbrokencomputer'])
+        }
+        else {
+          message.warning(res.data[0]['fixbrokencomputer'])
+        }
 			})
 	}
 	let tmp = 1
 	return (
 		<div>
 			<form onSubmit={handleSubmit}>
-				<h3>Chọn máy cần sửa</h3>
+        <h2>Select broken computer</h2>
 				<Select options={computerList} onChange={changeComputer} />
 				{selectedComputer.value}
-				<h3>Chọn nhân viên sửa chữa</h3>
+        <h2>Select staff ID</h2>
 				<Select options={repairerList} onChange={changeRepairer} />
-				<h4>Lịch sử lỗi máy được chọn:</h4>
-				{computerHistory.map((e) => {
-					return <li key={tmp++}>{e['seecomputerhistory']}</li>
-				})}
-				<h3>Chi phí</h3>
+        {computerHistory.length > 0 && <>
+          <h2>Selected computer history log:</h2>
+          <div>{computerHistory.map((e) => {
+            return <li key={tmp++}>{e['seecomputerhistory']}</li>
+          })}
+          </div>
+        </>
+        }
+        <hr />
+        <h2>Report detail</h2>
+        <h3>Cost</h3>
 				<input type='number' placeholder='Enter amount of money (VND)' onChange={handleAmountChange} />
-				<br />
-				<textarea placeholder='Mô tả lỗi' value={error} onChange={handleChangeError} rows='4' cols='50' />
+        <h3>Description</h3>
+        <textarea className='textarea' placeholder='Error description' value={error} onChange={handleChangeError} rows='4' cols='50' />
 				<input type='submit' value='Fix' />
-			</form>
-			<h4> Trạng thái: {message !== '' && message}</h4>
+      </form>
 		</div>
 	)
 }

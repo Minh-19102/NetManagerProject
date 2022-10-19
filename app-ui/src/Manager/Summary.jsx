@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import serverURL from '../serverURL'
+import BarChart from './BarChart';
 
 let date = new Date()
 let day = date.getDate();
@@ -15,6 +16,7 @@ function Summary() {
 	const [startDate, changeStartDate] = useState(fullDate)
   const [endDate, changeEndDate] = useState(fullDate)
   const [fixCost, changeFC] = useState(0)
+  const [chartData, setChartData] = useState([])
 	const handleSubmit = (e) => {
 		e.preventDefault()
     console.log('submit')
@@ -32,6 +34,8 @@ function Summary() {
             changeTSR(res.data[2])
           if (res.data[3]) 
             changeFC(res.data[3])
+          if (res.data[4])
+            setChartData(res.data[4].map(e => e['summaryrechargebydate']))
         })
       }
     )()
@@ -56,6 +60,9 @@ function Summary() {
         <h3>Tổng số thời gian khách sử dụng: {TotalPlayTime}</h3>
         <h3>Tổng số tiền khách sử dụng để order: {TotalServiceRevenue}</h3>
         <h3>Tổng chi phí sửa chữa: {fixCost}</h3>
+      </div>
+      <div>
+        <BarChart fetchData={chartData} />
       </div>
 		</div>
 	)

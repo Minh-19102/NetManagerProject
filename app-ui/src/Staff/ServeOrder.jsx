@@ -47,13 +47,12 @@ function Recharge() {
 	return (
 		<div>
 			<form onSubmit={handleSubmit}>
-				<h3>Chọn Ticket Order:</h3>
+        <h2>Select ordered ticket</h2>
 				<Select options={orderList} onChange={changeOrder} />
-				<h3>Chọn nhân viên:</h3>
+        <h2>Select staff ID</h2>
 				<Select options={serverList} onChange={changeServer} />
 				<input type='submit' value='Serve' />
-			</form>
-			<h4> Trạng thái: {message !== '' && message}</h4>
+      </form>
 		</div>
 	)
 }

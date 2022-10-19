@@ -51,16 +51,15 @@ function Recharge() {
 	return (
 		<div>
 			<form onSubmit={handleSubmit}>
-				<h3>Chọn người dùng:</h3>
+        <h2>Select username</h2>
 				<Select options={userList} onChange={changeUser} />
-				<h3>Chọn nhân viên:</h3>
+        <h2>Select staff ID</h2>
 				<Select options={cashierList} onChange={changeCashier} />
-				<h3>Số tiền nạp</h3>
+        <h2>Amount</h2>
 				<input type='number' placeholder='Enter amount of money (VND)' onChange={handleAmountChange} />
         <br/>
 				<input type='submit' value='Purchase' />
-			</form>
-			<h4> Trạng thái: {message !== '' && message}</h4>
+      </form>
 		</div>
 	)
 }

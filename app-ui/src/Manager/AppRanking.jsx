@@ -1,7 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import serverURL from '../serverURL'
+import { Table } from 'antd'
+
 function AppRanking() {
+  const columns = [
+    {
+      title: 'index',
+      dataIndex: 'key',
+      key: 'key',
+    },
+    {
+      title: 'App ID',
+      dataIndex: 'app_id',
+      key: 'app_id',
+    },
+    {
+      title: `App's name`,
+      dataIndex: 'name',
+      key: 'name',
+    },
+    {
+      title: 'Total used',
+      dataIndex: 'count',
+      key: 'count',
+    },
+  ];
+
 	const [Data, DataChange] = useState([])
 	useEffect(() => {
 		;(async () => {
@@ -12,26 +37,13 @@ function AppRanking() {
 		})()
 	}, [])
 	return (
-		<div>
-			<table>
-				<tbody>
-					<tr>
-						<th>AppID</th>
-						<th>App's name</th>
-						<th>Total Opened</th>
-					</tr>
-					{Data.map((element) => {
-						return (
-							<tr key={element.app_id}>
-								<td>{element.app_id}</td>
-								<td>{element.name}</td>
-								<td>{element.count}</td>
-							</tr>
-						)
-					})}
-				</tbody>
-			</table>
-		</div>
+    <Table
+      style={{ margin: '20px' }}
+      align='center'
+      bordered={true}
+      columns={columns}
+      dataSource={Data}
+    />
 	)
 }
 

@@ -7,6 +7,8 @@ import Manager from './Manager'
 import Login from './User/Login'
 import AccountRegister from './User/AccountRegister'
 import './css/App.css'
+import * as d3 from 'd3'
+
 function App() {
 	return (
 		<div>

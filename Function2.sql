@@ -92,3 +92,16 @@ BEGIN
   RETURN 'Thành công';
   END;
 $$ LANGUAGE PLPGSQL;
+
+CREATE OR REPLACE FUNCTION SummaryRechargeByDate(IN start_date timestamp, IN end_date timestamp) RETURNS SETOF INT AS
+$$
+DECLARE
+rec int;
+BEGIN
+  WHILE start_date < end_date LOOP
+    SELECT SUM(amount) FROM recharge WHERE recharge_time BETWEEN start_date AND start_date + interval '1 day' INTO rec ;
+  	SELECT INTO start_date (start_date + interval '1 day');
+    RETURN next rec;
+  END LOOP;
+END;
+$$ LANGUAGE PLPGSQL;

@@ -10,7 +10,7 @@ import AppUsing from './User/AppUsing'
 import ReportError from './User/ReportError'
 import { Layout, Menu, PageHeader, Tag } from 'antd'
 import { DesktopOutlined, CoffeeOutlined, UserOutlined, LogoutOutlined } from '@ant-design/icons'
-const { Header, Content, Footer, Sider } = Layout;
+const { Content, Sider } = Layout;
 function getItem(label, key, icon) {
   return {
     key,
@@ -41,7 +41,7 @@ function User() {
     else {
       setTimeout(() => {
         changeShowPage(true)
-      }, 500)
+      }, 1000)
     }
     setInterval(
 			(function tmpFunction() {
@@ -74,7 +74,8 @@ function User() {
 		})()
 	}
 
-	return (
+  return (<>{
+    showPage &&
     <Layout
       style={{
         minHeight: '80vh',
@@ -128,7 +129,7 @@ function User() {
         </Content>
       </Layout>
     </Layout>
-	)
+  }	</>)
 }
 
 export default User
